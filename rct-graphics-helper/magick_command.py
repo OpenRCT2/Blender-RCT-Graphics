@@ -1,6 +1,11 @@
 # Class for building magick commands
+import os
+
 class MagickCommand(object):
     full_command = ""
+
+    b_open = "( " if os.name != 'posix' else "\( "
+    b_close =") " if os.name != 'posix' else " \) "
 
     def __init__(self, input):
         self.full_command = self.__stringify_input(input)
@@ -20,9 +25,9 @@ class MagickCommand(object):
         if delete_previous:
             delete_addition = "+delete "
             post = " " + self.__stringify_input(next_file)
-        self.full_command = "( " + self.full_command + \
+        self.full_command = self.b_open + self.full_command + \
             " -write mpr:" + id + \
-            " " + delete_addition + ")" + post
+            " " + delete_addition + self.b_close + post
 
     # Quantizes the image using a palette
     def quantize(self, palette, amount):
@@ -51,33 +56,33 @@ class MagickCommand(object):
 
     # Mixes between the current source, and source B given a mask
     def mask_mix(self, sourceB, mask):
-        self.full_command = "( " + self.full_command + " ) " + \
+        self.full_command = self.b_open + self.full_command + self.b_close + \
             self.__stringify_input(sourceB) + " " + \
             self.__stringify_input(mask) + " -composite"
 
     # Mixes between the current source, alpha given a mask
     def mask_mix_self(self, mask):
-        self.full_command = "( " + self.full_command + " ) " + \
+        self.full_command = self.b_open + self.full_command + self.b_close + \
             "-alpha on ( +clone -channel a -fx 0 ) +swap " + \
             self.__stringify_input(mask) + " -composite"
 
     # Combines the current source with sourceB
     def combine(self, sourceB):
-        self.full_command = "( " + self.full_command + " ) " + \
+        self.full_command = self.b_open + self.full_command + self.b_close + \
             self.__stringify_input(sourceB) + " -composite"
 
     # Adds the current source and sourceB together using addition
     def additive(self, sourceB):
-        self.full_command = "( " + self.full_command + " ) " + \
+        self.full_command = self.b_open + self.full_command + self.b_close + \
             self.__stringify_input(sourceB) + " -compose plus -composite"
 
     # Copies the alpha channel from the alpha_source and applies it to the current source
     def copy_alpha(self, alpha_source):
         mask = self.__stringify_input(
             alpha_source)
-        self.full_command = "( " + self.full_command + \
-            " ) ( " + \
-            mask + " ) -compose CopyOpacity -composite"
+        self.full_command = self.b_open + self.full_command + \
+            self.b_close + self.b_open + \
+            mask + self.b_close + "-compose CopyOpacity -composite"
 
     def set_bit_depth(self, depth):
         self.full_command += " -depth " + str(depth)
@@ -98,4 +103,4 @@ class MagickCommand(object):
                 return input
             return "\"" + input + "\""
         self.use_repage = self.use_repage or input.use_repage
-        return "( " + input.full_command + " )"
+        return self.b_open + input.full_command + self.b_close
