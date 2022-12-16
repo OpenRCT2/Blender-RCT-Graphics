@@ -13,13 +13,7 @@ import os
 
 from .operators.init_operator import Init
 
-from .operators.vehicle_render_operator import RenderVehicle
-
-from .operators.walls_render_operator import RenderWalls
-
-from .operators.track_render_operator import RenderTrack
-
-from .operators.render_tiles_operator import RenderTiles
+from .operators.render_switch_operator import RenderRCTSwitch
 
 from .models.palette import palette_colors, palette_colors_details
 
@@ -39,6 +33,13 @@ class RepairConfirmOperator(bpy.types.Operator):
 
     def invoke(self, context, event):
         return context.window_manager.invoke_confirm(self, event)
+
+def addRenderButton(layout, hasFailed = False):
+    row = layout.row()
+    text = "Render"
+    if hasFailed:
+        text = "Render failed"
+    row.operator("render.rct_switch", text=text)
 
 class GraphicsHelperPanel(bpy.types.Panel):
     bl_label = "RCT Graphics Helper"
@@ -169,11 +170,7 @@ class GraphicsHelperPanel(bpy.types.Panel):
         if properties.object_width > 1 or properties.object_length > 1:
             row.prop(properties, "invert_tile_positions")
 
-        row = layout.row()
-        text = "Render"
-        if general_properties.rendering:
-            text = "Failed"
-        row.operator("render.rct_static", text=text)
+        addRenderButton(layout, general_properties.rendering)
 
     def draw_walls_panel(self, scene, layout):
         properties = scene.rct_graphics_helper_walls_properties
@@ -188,11 +185,7 @@ class GraphicsHelperPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(properties, "doorway")
 
-        row = layout.row()
-        text = "Render"
-        if general_properties.rendering:
-            text = "Failed"
-        row.operator("render.rct_walls", text=text)
+        addRenderButton(layout, general_properties.rendering)
 
     def draw_track_panel(self, scene, layout):
         properties = scene.rct_graphics_helper_track_properties
@@ -237,8 +230,4 @@ class GraphicsHelperPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(properties, "inverted_set")
 
-        row = layout.row()
-        text = "Render"
-        if general_properties.rendering:
-            text = "Failed"
-        row.operator("render.rct_vehicle", text=text)
+        addRenderButton(layout, general_properties.rendering)
