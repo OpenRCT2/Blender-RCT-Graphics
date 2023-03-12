@@ -1,5 +1,5 @@
 '''
-Copyright (c) 2022 RCT Graphics Helper developers
+Copyright (c) 2023 RCT Graphics Helper developers
 
 For a complete list of all authors, please refer to the addon's meta info.
 Interested in contributing? Visit https://github.com/oli414/Blender-RCT-Graphics
@@ -12,7 +12,7 @@ import math
 import os
 
 from ..operators.render_operator import RCTRender
-
+from ..angle_sections.track import sprite_group_metadata, legacy_group_names, legacy_group_metadata
 
 class SpriteTrackFlag(object):
     name = ""
@@ -27,79 +27,55 @@ class SpriteTrackFlag(object):
         self.default_value = default_value
 
 
+def CreateSpriteEnum(defaultValue):
+    return (
+        ("0", "Disabled" + (defaultValue == 0 and " (Default)" or ""), "No sprites are rendered", 0),
+        ("1", "1" + (defaultValue == 1 and " (Default)" or ""), "One sprite rendered", 1),
+        ("2", "2" + (defaultValue == 2 and " (Default)" or ""), "Two sprites rendered", 2),
+        ("4", "4" + (defaultValue == 4 and " (Default)" or ""), "Four sprites rendered", 4),
+        ("8", "8" + (defaultValue == 8 and " (Default)" or ""), "Eight sprites rendered", 8),
+        ("16", "16" + (defaultValue == 16 and " (Default)" or ""), "Sixteen sprites rendered", 16),
+        ("32", "32" + (defaultValue == 32 and " (Default)" or ""), "Thirty-two sprites rendered", 32),
+        ("64", "64" + (defaultValue == 64 and " (Default)" or ""), "Sixty-four sprites rendered", 64)
+    )
+
 class VehicleProperties(bpy.types.PropertyGroup):
-    sprite_track_flags_list = []
-
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_FLAT",
-        "Flat",
-        "Render sprites for flat track",
-        True))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_GENTLE_SLOPES",
-        "Gentle Slopes",
-        "Render sprites for gentle sloped track",
-        True))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_STEEP_SLOPES",
-        "Steep Slopes",
-        "Render sprites for steep sloped track",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES",
-        "Vertical Slopes And Invert",
-        "Render sprites for vertically sloped track and inverts",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES",
-        "Diagonal Slopes",
-        "Render sprites for diagonal slopes",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_FLAT_BANKED",
-        "Flat Banked",
-        "Render sprites for flat banked track",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "SLOPED_TURNS",
-        "Gentle Sloped Banked",
-        "Render sprites for gently sloped banked track and turns",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_INLINE_TWISTS",
-        "Inline twist",
-        "Render sprites for the inline twist element",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_CORKSCREWS",
-        "Corkscrew",
-        "Render sprites for corkscrews",
-        False))
-    sprite_track_flags_list.append(SpriteTrackFlag(
-        "VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL",
-        "Curved Lift Hill",
-        "Render sprites for a curved lift hill",
-        False))
-
-    defaults = []
-    for sprite_track_flag in sprite_track_flags_list:
-        defaults.append(sprite_track_flag.default_value)
+    # Create legacy sprite groups
+    legacy_defaults = []
+    legacy_spritegroups = {}
+    for legacy_group_name in legacy_group_names:
+        config = legacy_group_metadata[legacy_group_name]
+        legacy_spritegroups[legacy_group_name] = SpriteTrackFlag(legacy_group_name, *config)
+        legacy_defaults.append(config[2])
 
     sprite_track_flags = bpy.props.BoolVectorProperty(
         name="Track Pieces",
-        default=defaults,
+        default=legacy_defaults,
         description="Which track pieces to render sprites for",
-        size=len(sprite_track_flags_list))
+        size=len(legacy_spritegroups))
 
-    restraint_animation = bpy.props.BoolProperty(
-        name="Restraint Animation",
-        description="Render with restraint animation. The restrain animation is 3 frames long and starts at frame 1",
-        default=False)
+    # Create modern sprite groups
+    for key, config in sprite_group_metadata.items():
+        locals()[key] = bpy.props.EnumProperty(
+            name = key,
+            description = config[1],
+            items = CreateSpriteEnum(config[0])
+        )
 
     inverted_set = bpy.props.BoolProperty(
         name="Inverted Set",
         description="Used for rides which can invert for an extended amount of time like the flying and lay-down rollercoasters",
         default=False)
+
+    sprite_group_mode = bpy.props.EnumProperty(
+        name="Sprite group mode",
+        items=(
+            ("SIMPLE", "Simple sprite groups",
+             "Combines several sprite groups and sets their sprite precisions automatically", 1),
+            ("FULL", "Full sprite groups",
+             "Set all sprite group precisions manually", 2),
+        )
+    )
 
 
 def register_vehicles_properties():
