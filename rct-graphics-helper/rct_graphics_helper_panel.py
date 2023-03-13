@@ -239,14 +239,15 @@ class GraphicsHelperPanel(bpy.types.Panel):
                 sprite_track_flagset = properties.legacy_spritegroups[legacy_group_name]
                 index = legacy_group_names.index(legacy_group_name)
                 columns[i % 2].row().prop(properties, "sprite_track_flags",
-                                          index=index, text=sprite_track_flagset.name, description = sprite_track_flagset.description)
+                                          index=index, text=sprite_track_flagset.name)
                 i += 1
         else:
             columns = [column.split(0.667) for column in columns]
             subcolumns = [columns[0].column(), columns[0].column(),columns[1].column(), columns[1].column()]
+            splitpoint = len(sprite_group_names) // 2
             for sprite_group_name in sprite_group_names:
-                subcolumns[(i * 2) % 4].row().label(sprite_group_name+":")
-                subcolumns[(i * 2 + 1) % 4].row().prop(properties, sprite_group_name, text = "")
+                subcolumns[(i > splitpoint) * 2].row().label(sprite_group_name+":")
+                subcolumns[(i > splitpoint) * 2 + 1].row().prop(properties, sprite_group_name, text = "")
                 i += 1
 
         row = layout.row()
