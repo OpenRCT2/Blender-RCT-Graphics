@@ -9,16 +9,19 @@ RCT Graphics Helper is licensed under the GNU General Public License version 3.
 
 # This is the order sprite groups are rendered in
 sprite_group_names = [
-    "slopeFlat",        "slopes12",           "slopes25",         "slopes42",         "slopes60",
-    "slopes75",         "slopes90",           "slopesLoop",       "slopeInverted",    "slopes8",
-    "slopes16",         "slopes50",           "flatBanked22",     "flatBanked45",     "flatBanked67",
-    "flatBanked90",     "inlineTwists",       "slopes12Banked22", "slopes8Banked22",  "slopes25Banked22",
-    "slopes25Banked45", "slopes12Banked45",   "slopes25Banked67", "slopes25Banked90", "slopes25InlineTwists",
-    "slopes42Banked22", "slopes42Banked45",   "slopes42Banked67", "slopes42Banked90", "slopes60Banked22",
-    "corkscrews",       "restraintAnimation", "curvedLiftHillUp", "curvedLiftHillDown"
+    "slopeFlat",         "slopes12",         "slopes25",           "slopes42",
+    "slopes60",          "slopes75",         "slopes90",           "slopesLoop",
+    "slopeInverted",     "slopes8",          "slopes16",           "slopes50",
+    "flatBanked22",      "flatBanked45",     "flatBanked67",       "flatBanked90",
+    "inlineTwists",      "slopes12Banked22", "slopes8Banked22",    "slopes25Banked22",
+    "slopes8Banked45",   "slopes16Banked22", "slopes16Banked45",   "slopes25Banked45",
+    "slopes12Banked45",  "slopes25Banked67", "slopes25Banked90",   "slopes25InlineTwists",
+    "slopes42Banked22",  "slopes42Banked45", "slopes42Banked67",   "slopes42Banked90",
+    "slopes60Banked22",  "corkscrews",       "restraintAnimation", "curvedLiftHillUp",
+    "curvedLiftHillDown"
 ]
 
-# The sprites to render in each sprite group. The given rotation values are used in simple mode
+# The sprites to render in each sprite group. The given rotation values are unused
 sprite_group_manifest = {
     'slopeFlat': [
         [False, 32, 0, 0, 0]
@@ -115,6 +118,24 @@ sprite_group_manifest = {
         [False, 4, 22.2052, 22.5, 0],
         [False, 4, -22.2052, -22.5, 0],
         [False, 4, -22.2052, 22.5, 0]
+    ],
+    'slopes8Banked45': [
+        [True, 4, 8.0503, -45, 0],
+        [True, 4, 8.0503, 45, 0],
+        [True, 4, -8.0503, -45, 0],
+        [True, 4, -8.0503, 45, 0]
+    ],
+    'Slopes16Banked22': [
+        [True, 4, 16.1005, -22.5, 0],
+        [True, 4, 16.1005, 22.5, 0],
+        [True, 4, -16.1005, -22.5, 0],
+        [True, 4, -16.1005, 22.5, 0]
+    ],
+    'Slopes16Banked45': [
+        [True, 4, 16.1005, -45, 0],
+        [True, 4, 16.1005, 45, 0],
+        [True, 4, -16.1005, -45, 0],
+        [True, 4, -16.1005, 45, 0]
     ],
     'slopes25Banked45': [
         [False, 32, 22.2052, -45, 0],
@@ -243,6 +264,9 @@ sprite_group_metadata = {
     "slopes8Banked22": [4, "Diagonal flat-to-gentle-and-flat-to-banked transition track"],
     "slopes25Banked22": [4, "Orthogonal gentle slope flat-to-bank transition track"],
     "slopes25Banked45": [32, "Gentle sloped banked turns"],
+    "slopes8Banked45": [4, "Diagonal flat-to-gentle slope banked transition track"],
+    "slopes16Banked22": [4, "Diagonal gentle slope flat-to-banked transition track"],
+    "slopes16Banked45": [4, "Diagonal gentle slope banked track"],
     "slopes12Banked45": [4, "Orthogonal flat-to-gentle-slope banked transition track"],
     "slopes25Banked67": [4, "Part of small zero-G rolls"],
     "slopes25Banked90": [4, "Part of small zero-G rolls"],
@@ -274,7 +298,8 @@ legacy_group_names = [
     "VEHICLE_SPRITE_FLAG_CORKSCREWS",
     "VEHICLE_SPRITE_FLAG_RESTRAINT_ANIMATION",
     "VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL",
-    "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS"
+    "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS",
+    "VEHICLE_SPRITE_FLAG_INVERTED"
 ]
 
 # Display name of each sprite group, tooltip for each sprite group, default state of each sprite group
@@ -288,13 +313,15 @@ legacy_group_metadata = {
     "VEHICLE_SPRITE_FLAG_INLINE_TWISTS": ["Inline Twist", "Render sprites for the inline twist element", False],
     "VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_BANKED_TRANSITIONS": ["", "", False],
     "VEHICLE_SPRITE_FLAG_DIAGONAL_GENTLE_SLOPE_BANKED_TRANSITIONS": ["", "", False],
+    "VEHICLE_SPRITE_FLAG_DIAGONAL_GENTLE_SLOPE_BANKED_TRANSITIONS": ["", "", False],
     "VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS": ["", "", False],
     "VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS": ["Sloped Banked Turns","Render sprites for sloped banked turns", False],
     "VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_WHILE_BANKED_TRANSITIONS": ["", "", False],
     "VEHICLE_SPRITE_FLAG_CORKSCREWS": ["Corkscrew", "Render sprites for corkscrews", False],
     "VEHICLE_SPRITE_FLAG_RESTRAINT_ANIMATION": ["Animated Restraints", "Render animated restraints", False],
     "VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL": ["Spiral Lifthill", "Render sprites for spiral lifthills", False],
-    "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS": ["Zero-G Rolls", "Render sprites for zero-G rolls", False]
+    "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS": ["Zero-G Rolls", "Render sprites for zero-G rolls", False],
+    "VEHICLE_SPRITE_FLAG_INVERTED": ["", "", False],
 }
 
 # What full sprite groups each legacy group maps to
@@ -302,7 +329,7 @@ legacy_group_map = {
     'VEHICLE_SPRITE_FLAG_FLAT': [ 'slopeFlat' ],
     'VEHICLE_SPRITE_FLAG_GENTLE_SLOPES': ['slopes12', 'slopes25'],
     'VEHICLE_SPRITE_FLAG_STEEP_SLOPES': ['slopes42', 'slopes60'],
-    'VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES': ['slopes75', 'slopes90', 'slopesLoop','slopeInverted'],
+    'VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES': ['slopes75', 'slopes90', 'slopesLoop'],
     'VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES': ['slopes8', 'slopes16','slopes50'],
     'VEHICLE_SPRITE_FLAG_FLAT_BANKED': ['flatBanked22','flatBanked45'],
     'VEHICLE_SPRITE_FLAG_INLINE_TWISTS': ['flatBanked67', 'flatBanked90', 'inlineTwists'],
@@ -314,7 +341,8 @@ legacy_group_map = {
     'VEHICLE_SPRITE_FLAG_CORKSCREWS': ['corkscrews'],
     'VEHICLE_SPRITE_FLAG_RESTRAINT_ANIMATION': ['restraintAnimation'],
     'VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL': ['curvedLiftHillUp', 'curvedLiftHillDown'],
-    'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS': ["slopes60Banked22", "slopes42Banked22","slopes42Banked45","slopes42Banked67","slopes42Banked90", "slopes25InlineTwists", "slopes25Banked67","slopes25Banked90"]
+    'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS': ["slopes60Banked22", "slopes42Banked22","slopes42Banked45","slopes42Banked67","slopes42Banked90", "slopes25InlineTwists", "slopes25Banked67","slopes25Banked90"],
+    'VEHICLE_SPRITE_FLAG_INVERTED': ['slopeInverted']
 }
 
 # What legacy groups are implied by combinations of other legacy sprite groups
@@ -322,7 +350,7 @@ legacy_group_implications = {
     frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS'}): frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS','VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_WHILE_BANKED_TRANSITIONS','VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_BANKED_TRANSITIONS'}),
     frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED','VEHICLE_SPRITE_FLAG_GENTLE_SLOPES'}): frozenset({'VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_BANKED_TRANSITIONS'}),
     frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED','VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES'}): frozenset({'VEHICLE_SPRITE_FLAG_DIAGONAL_GENTLE_SLOPE_BANKED_TRANSITIONS'}),
-    frozenset({'VEHICLE_SPRITE_FLAG_INLINE_TWISTS'}): frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED', 'VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES'}),
-    frozenset({'VEHICLE_SPRITE_FLAG_CORKSCREWS'}): frozenset({'VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES'}),
-    frozenset({'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS'}): frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPES', 'VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES'})
+    frozenset({'VEHICLE_SPRITE_FLAG_INLINE_TWISTS'}): frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED', 'VEHICLE_SPRITE_FLAG_INVERTED'}),
+    frozenset({'VEHICLE_SPRITE_FLAG_CORKSCREWS'}): frozenset({'VEHICLE_SPRITE_FLAG_INVERTED_SLOPES'}),
+    frozenset({'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS'}): frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPES', 'VEHICLE_SPRITE_FLAG_INVERTED'})
 }
