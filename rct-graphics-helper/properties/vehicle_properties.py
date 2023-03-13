@@ -29,15 +29,19 @@ class SpriteTrackFlag(object):
 
 def CreateSpriteEnum(defaultValue):
     return (
-        ("0", "Disabled" + (defaultValue == 0 and " (Default)" or ""), "No sprites are rendered", 0),
-        ("1", "1" + (defaultValue == 1 and " (Default)" or ""), "One sprite rendered", 1),
-        ("2", "2" + (defaultValue == 2 and " (Default)" or ""), "Two sprites rendered", 2),
-        ("4", "4" + (defaultValue == 4 and " (Default)" or ""), "Four sprites rendered", 4),
-        ("8", "8" + (defaultValue == 8 and " (Default)" or ""), "Eight sprites rendered", 8),
-        ("16", "16" + (defaultValue == 16 and " (Default)" or ""), "Sixteen sprites rendered", 16),
-        ("32", "32" + (defaultValue == 32 and " (Default)" or ""), "Thirty-two sprites rendered", 32),
-        ("64", "64" + (defaultValue == 64 and " (Default)" or ""), "Sixty-four sprites rendered", 64)
+        ("0", "Disabled" + (defaultValue == 0 and " (Default)" or ""), "No sprites rendered", 0),
+        ("1", "1" + (defaultValue == 1 and " (Default)" or ""), "1 sprite", 1),
+        ("2", "2" + (defaultValue == 2 and " (Default)" or ""), "2 sprites", 2),
+        ("4", "4" + (defaultValue == 4 and " (Default)" or ""), "4 sprites (recommended minimum)", 4),
+        ("8", "8" + (defaultValue == 8 and " (Default)" or ""), "8 sprites", 8),
+        ("16", "16" + (defaultValue == 16 and " (Default)" or ""), "16 sprites (RCT1 default)", 16),
+        ("32", "32" + (defaultValue == 32 and " (Default)" or ""), "32 sprites (RCT2 default)", 32),
+        ("64", "64" + (defaultValue == 64 and " (Default)" or ""), "64 sprites (OpenRCT2 not yet implemented)", 64)
     )
+
+# this is called with self as VehicleProperties
+def legacy_groups_to_set(self, value):
+    difference = [(self.sprite_track_flags[i] != value[i]) * (value[i] and 1 or -1) for i in range(len(self.sprite_track_flags))]
 
 class VehicleProperties(bpy.types.PropertyGroup):
     # Create legacy sprite groups
@@ -52,7 +56,9 @@ class VehicleProperties(bpy.types.PropertyGroup):
         name="Track Pieces",
         default=legacy_defaults,
         description="Which track pieces to render sprites for",
-        size=len(legacy_spritegroups))
+        size=len(legacy_spritegroups),
+        set = legacy_groups_to_set
+    )
 
     # Create modern sprite groups
     for key, config in sprite_group_metadata.items():
