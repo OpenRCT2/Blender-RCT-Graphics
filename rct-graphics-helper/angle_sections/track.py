@@ -125,13 +125,13 @@ sprite_group_manifest = {
         [True, 4, -8.0503, -45, 0],
         [True, 4, -8.0503, 45, 0]
     ],
-    'Slopes16Banked22': [
+    'slopes16Banked22': [
         [True, 4, 16.1005, -22.5, 0],
         [True, 4, 16.1005, 22.5, 0],
         [True, 4, -16.1005, -22.5, 0],
         [True, 4, -16.1005, 22.5, 0]
     ],
-    'Slopes16Banked45': [
+    'slopes16Banked45': [
         [True, 4, 16.1005, -45, 0],
         [True, 4, 16.1005, 45, 0],
         [True, 4, -16.1005, -45, 0],
@@ -282,6 +282,7 @@ sprite_group_metadata = {
     "curvedLiftHillDown": [32, "Spiral lifthill down track"]
 }
 
+# All legacy groups. See list in rct_graphics_helper_panel.py for which ones are displayed
 legacy_group_names = [
     "VEHICLE_SPRITE_FLAG_FLAT",
     "VEHICLE_SPRITE_FLAG_GENTLE_SLOPES",
@@ -299,6 +300,16 @@ legacy_group_names = [
     "VEHICLE_SPRITE_FLAG_RESTRAINT_ANIMATION",
     "VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL",
     "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS",
+    "VEHICLE_SPRITE_FLAG_INVERTED",
+    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPE_BANKED"
+]
+
+# Legacy sprite groups that are reset every time the user makes a selection
+legacy_groups_implied = [
+    "VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_BANKED_TRANSITIONS",
+    "VEHICLE_SPRITE_FLAG_DIAGONAL_GENTLE_SLOPE_BANKED_TRANSITIONS",
+    "VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_WHILE_BANKED_TRANSITIONS",
+    "VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS",
     "VEHICLE_SPRITE_FLAG_INVERTED"
 ]
 
@@ -322,6 +333,7 @@ legacy_group_metadata = {
     "VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL": ["Spiral Lifthill", "Render sprites for spiral lifthills", False],
     "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS": ["Zero-G Rolls", "Render sprites for zero-G rolls", False],
     "VEHICLE_SPRITE_FLAG_INVERTED": ["", "", False],
+    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPE_BANKED": ["Diagonal Sloped Banked", "Render sprites for diagonal sloped banked track", False],
 }
 
 # What full sprite groups each legacy group maps to
@@ -342,15 +354,19 @@ legacy_group_map = {
     'VEHICLE_SPRITE_FLAG_RESTRAINT_ANIMATION': ['restraintAnimation'],
     'VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL': ['curvedLiftHillUp', 'curvedLiftHillDown'],
     'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS': ["slopes60Banked22", "slopes42Banked22","slopes42Banked45","slopes42Banked67","slopes42Banked90", "slopes25InlineTwists", "slopes25Banked67","slopes25Banked90"],
-    'VEHICLE_SPRITE_FLAG_INVERTED': ['slopeInverted']
+    'VEHICLE_SPRITE_FLAG_INVERTED': ['slopeInverted'],
+    'VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPE_BANKED': ['slopes8Banked45', 'slopes16Banked22', 'slopes16Banked45']
 }
 
 # What legacy groups are implied by combinations of other legacy sprite groups
-legacy_group_implications = {
+legacy_group_dependencies = {
     frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS'}): frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS','VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_WHILE_BANKED_TRANSITIONS','VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_BANKED_TRANSITIONS'}),
     frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED','VEHICLE_SPRITE_FLAG_GENTLE_SLOPES'}): frozenset({'VEHICLE_SPRITE_FLAG_FLAT_TO_GENTLE_SLOPE_BANKED_TRANSITIONS'}),
     frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED','VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES'}): frozenset({'VEHICLE_SPRITE_FLAG_DIAGONAL_GENTLE_SLOPE_BANKED_TRANSITIONS'}),
     frozenset({'VEHICLE_SPRITE_FLAG_INLINE_TWISTS'}): frozenset({'VEHICLE_SPRITE_FLAG_FLAT_BANKED', 'VEHICLE_SPRITE_FLAG_INVERTED'}),
-    frozenset({'VEHICLE_SPRITE_FLAG_CORKSCREWS'}): frozenset({'VEHICLE_SPRITE_FLAG_INVERTED_SLOPES'}),
-    frozenset({'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS'}): frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPES', 'VEHICLE_SPRITE_FLAG_INVERTED'})
+    frozenset({'VEHICLE_SPRITE_FLAG_CORKSCREWS'}): frozenset({'VEHICLE_SPRITE_FLAG_INVERTED'}),
+    frozenset({'VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS'}): frozenset({'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TRANSITIONS', 'VEHICLE_SPRITE_FLAG_GENTLE_SLOPES', 'VEHICLE_SPRITE_FLAG_INVERTED'}),
+    frozenset({'VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPE_BANKED'}): frozenset({'VEHICLE_SPRITE_FLAG_DIAGONAL_GENTLE_SLOPE_BANKED_TRANSITIONS'})
 }
+
+

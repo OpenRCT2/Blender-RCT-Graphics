@@ -44,11 +44,12 @@ def addRenderButton(layout, hasFailed = False):
 
 legacy_group_display_order = [
     "VEHICLE_SPRITE_FLAG_FLAT",
-    "VEHICLE_SPRITE_FLAG_GENTLE_SLOPES",
-    "VEHICLE_SPRITE_FLAG_STEEP_SLOPES",
-    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES",
     "VEHICLE_SPRITE_FLAG_FLAT_BANKED",
+    "VEHICLE_SPRITE_FLAG_GENTLE_SLOPES",
     "VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS",
+    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES",
+    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPE_BANKED",
+    "VEHICLE_SPRITE_FLAG_STEEP_SLOPES",
     "VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES",
     "VEHICLE_SPRITE_FLAG_INLINE_TWISTS",
     "VEHICLE_SPRITE_FLAG_CORKSCREWS",
@@ -238,7 +239,7 @@ class GraphicsHelperPanel(bpy.types.Panel):
             for legacy_group_name in self.legacy_group_display_order:
                 sprite_track_flagset = properties.legacy_spritegroups[legacy_group_name]
                 index = legacy_group_names.index(legacy_group_name)
-                columns[i % 2].row().prop(properties, "sprite_track_flags",
+                columns[i % 2].row().prop(properties, "legacy_flags",
                                           index=index, text=sprite_track_flagset.name)
                 i += 1
         else:
