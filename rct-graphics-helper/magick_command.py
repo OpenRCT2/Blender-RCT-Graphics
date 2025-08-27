@@ -54,7 +54,7 @@ class MagickCommand(object):
 
     # Replaces all instances of color with color2
     def replace_color(self, color, color2):
-        self.full_command += " -fill " + color2 + " -opaque " + color
+        self.full_command += " -fill \"" + color2 + "\" -opaque \"" + color + "\""
 
     # Mixes between the current source, and source B given a mask
     def mask_mix(self, sourceB, mask):
