@@ -19,7 +19,7 @@ The following programs are necessary:
 
 # Installing
 
-1. Download the [latest release](https://github.com/oli414/Blender-RCT-Graphics/releases) of the RCT Graphics Helper Blender add-on.
+1. Download the [latest release](https://github.com/OpenRCT2/Blender-RCT-Graphics/releases) of the RCT Graphics Helper Blender add-on.
 2. In Blender, click on File > User Preferences > Add-ons > "Install Add-on from File..."
 3. In the file explorer window, select the downloaded RCT Graphics Helper zip file.
 4. Enable the add-on by clicking the checkbox to the left of "RendeR: RCT Graphics Helper"
@@ -35,11 +35,11 @@ The following programs are necessary:
 5. More options are now available in the RCT Graphics Helper section. Click the "Render" button to start rendering the scene.
 6. In the folder where the Blend file is saved, an "output" folder has been created with the rendered image files.
 
-Please check the [guidelines](https://github.com/oli414/Blender-RCT-Graphics/wiki/Guidelines) for the best results.
+Please check the [guidelines](https://github.com/OpenRCT2/Blender-RCT-Graphics/wiki/Guidelines) for the best results.
 
 # Documentation
 
-[Check out our wiki](https://github.com/oli414/Blender-RCT-Graphics/wiki/Documentation) for more in-depth details on all the available options.
+[Check out our wiki](https://github.com/OpenRCT2/Blender-RCT-Graphics/wiki/Documentation) for more in-depth details on all the available options.
 
 # Notes
 
