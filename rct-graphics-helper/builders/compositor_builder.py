@@ -48,11 +48,28 @@ class CompositorBuilder(NodesBuilder):
         self.exit_branch_point()
 
         self.link(aa_mask, 0, combine_node, 3)
+        
+        #CurveRGB node
+        CurveRGB_composite_node = self.create_node("CompositorNodeCurveRGB")
+        curve_c = CurveRGB_composite_node.mapping.curves[3]
+        curve_c.points.new(.5,.5)
+        curve_c.points.new(.3,.2)
+        
+        self.link(mixed_anti_aliased, 0, CurveRGB_composite_node, 1)
+        
+        self.next_column()
+        
+        #HSV node
+        HueSat_composite_node = self.create_node("CompositorNodeHueSat")
+        HueSat_composite_node.inputs[2].default_value = 0.9
+        self.link(CurveRGB_composite_node, 0, HueSat_composite_node, 0)
+        
+        self.next_column()
 
         # Main output node
         output_composite_node = self.create_node("CompositorNodeComposite")
 
-        self.link(mixed_anti_aliased, 0, output_composite_node, 0)
+        self.link(HueSat_composite_node, 0, output_composite_node, 0)
         self.link(aa_mask, 0, output_composite_node, 1)
 
         # Metadata output node
