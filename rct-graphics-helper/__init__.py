@@ -18,7 +18,6 @@ from .properties.track_properties import register_track_properties, unregister_t
 from .rct_graphics_helper_panel import GraphicsHelperPanel
 from .rct_graphics_render_button import try_register_button, unregister_button
 from . import developer_utils
-
 import importlib
 import bpy
 
@@ -26,7 +25,7 @@ bl_info = {
     "name": "RCT Graphics Helper",
     "description": "Render tool to replicate RCT graphics",
     "author": "Olivier Wervers",
-    "version": (0, 6, 0),
+    "version": (0, 6, 1),
     "blender": (2, 79, 0),
     "location": "Render",
     "support": "COMMUNITY",
