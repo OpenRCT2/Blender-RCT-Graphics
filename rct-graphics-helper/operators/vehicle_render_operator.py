@@ -12,7 +12,7 @@ import math
 import os
 
 from ..operators.render_operator import RCTRender
-from ..angle_sections.track import sprite_group_names, sprite_group_manifest
+from ..angle_sections.track import sprite_group_display_order, sprite_group_manifest
 
 
 class RenderVehicle(RCTRender, bpy.types.Operator):
@@ -63,7 +63,7 @@ class RenderVehicle(RCTRender, bpy.types.Operator):
         if is_inverted:
             extra_roll = 180
 
-        for sprite_group_name in sprite_group_names:
+        for sprite_group_name in sprite_group_display_order:
             track_sections = sprite_group_manifest[sprite_group_name]
 
             if sprite_group_name not in properties:

@@ -36,7 +36,7 @@ def CreateSpriteEnum(defaultValue):
         ("8", "8" + (defaultValue == 8 and " (Default)" or ""), "8 sprites", 8),
         ("16", "16" + (defaultValue == 16 and " (Default)" or ""), "16 sprites", 16),
         ("32", "32" + (defaultValue == 32 and " (Default)" or ""), "32 sprites (RCT2 default)", 32),
-        ("64", "64" + (defaultValue == 64 and " (Default)" or ""), "64 sprites  ", 64)
+#        ("64", "64" + (defaultValue == 64 and " (Default)" or ""), "64 sprites", 64)
     )
 
 def set_groups_by_legacy_set(self, set):
@@ -44,22 +44,27 @@ def set_groups_by_legacy_set(self, set):
         for group in newgroups:
             self[group] = sprite_group_metadata[group][0] * (groupname in set)
 
-# this is called with self as VehicleProperties
-def legacy_groups_set(self, value):
-    new_with_implied = { legacy_group_names[i] for i in range(len(value)) if value[i] or (legacy_group_names[i] in legacy_groups_implied) }
-    new = { legacy_group_names[i] for i in range(len(value)) if value[i] and not legacy_group_names[i] in legacy_groups_implied }
-    for implied, dependencies in legacy_group_dependencies.items():
-        if implied.issubset(new_with_implied):
-            for group in dependencies:
-                new.add(group)
-        if not implied.issubset(new_with_implied) and len(implied) == 1:
-            for group in implied:
-                new.discard(group)
-    set_groups_by_legacy_set(self, new)
-    value = [group in new for group in legacy_group_names]
-    for i in range(len(value)):
-        self.sprite_track_flags[i] = value[i]
+# this is called with self as VehicleProperties and bool_array as an array of bools in legacy_group_names order
+def legacy_groups_set(self, bool_array):
 
+    # convert bool array to set of legacy groups, and disable all implied groups
+    enabled_groups = { legacy_group_names[i] for i in range(len(bool_array)) if bool_array[i] and not legacy_group_names[i] in legacy_groups_implied }
+
+    # include all the groups that are dependent on other groups
+    for group_with_dependencies, dependencies in legacy_group_dependencies.items():
+        if group_with_dependencies.issubset(enabled_groups):
+            for group in dependencies:
+                enabled_groups.add(group)
+
+    # set the modern groups based on the set of legacy groups
+    set_groups_by_legacy_set(self, enabled_groups)
+
+    # set the internal property to the selected groups
+    bool_array = [group in enabled_groups for group in legacy_group_names]
+    for i in range(len(bool_array)):
+        self.sprite_track_flags[i] = bool_array[i]
+
+# Return bool array of current state
 def legacy_flags_get(self):
     return [x for x in self.sprite_track_flags]
 
@@ -73,17 +78,19 @@ class VehicleProperties(bpy.types.PropertyGroup):
     legacy_defaults = []
     legacy_spritegroups = {}
     for legacy_group_name in legacy_group_names:
-        config = legacy_group_metadata[legacy_group_name]
-        legacy_spritegroups[legacy_group_name] = SpriteTrackFlag(legacy_group_name, *config)
-        legacy_defaults.append(config[2])
+        legacy_group_config = legacy_group_metadata[legacy_group_name]
+        legacy_spritegroups[legacy_group_name] = SpriteTrackFlag(legacy_group_name, *legacy_group_config)
+        legacy_defaults.append(legacy_group_config[2])
 
+    # The actual property that is saved
     sprite_track_flags = bpy.props.BoolVectorProperty(
         name="Track Pieces",
         default=legacy_defaults,
         description="Which track pieces to render sprites for",
         size=len(legacy_spritegroups)
     )
-    
+
+    # Alias property which intercepts user input, to prevent recursive setter calls
     legacy_flags = bpy.props.BoolVectorProperty(
         name="Track Pieces",
         default=legacy_defaults,

@@ -16,7 +16,7 @@ from .operators.init_operator import Init
 from .operators.render_switch_operator import RenderRCTSwitch
 
 from .models.palette import palette_colors, palette_colors_details
-from .angle_sections.track import sprite_group_names, legacy_group_names, legacy_group_display_order
+from .angle_sections.track import sprite_group_display_order, legacy_group_names, legacy_group_display_order
 
 class RepairConfirmOperator(bpy.types.Operator):
     """This action will clear out the default camera and light. Changes made to the rig object, compositor nodes and recolorable materials will be lost."""
@@ -224,14 +224,14 @@ class GraphicsHelperPanel(bpy.types.Panel):
             for legacy_group_name in legacy_group_display_order:
                 sprite_track_flagset = properties.legacy_spritegroups[legacy_group_name]
                 index = legacy_group_names.index(legacy_group_name)
-                columns[i > splitpoint].row().prop(properties, "legacy_flags",
+                columns[i >= splitpoint].row().prop(properties, "legacy_flags",
                                                    index=index, text=sprite_track_flagset.name)
                 i += 1
         else:
             columns = [column.split(0.667) for column in columns]
             subcolumns = [columns[0].column(), columns[0].column(),columns[1].column(), columns[1].column()]
-            splitpoint = len(sprite_group_names) // 2
-            for sprite_group_name in sprite_group_names:
+            splitpoint = len(sprite_group_display_order) // 2
+            for sprite_group_name in sprite_group_display_order:
                 subcolumns[(i > splitpoint) * 2].row().label(sprite_group_name+":")
                 subcolumns[(i > splitpoint) * 2 + 1].row().prop(properties, sprite_group_name, text = "")
                 i += 1
