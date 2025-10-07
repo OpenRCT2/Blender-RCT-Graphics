@@ -16,7 +16,7 @@ from .operators.init_operator import Init
 from .operators.render_switch_operator import RenderRCTSwitch
 
 from .models.palette import palette_colors, palette_colors_details
-from .angle_sections.track import sprite_group_names, legacy_group_names
+from .angle_sections.track import sprite_group_names, legacy_group_names, legacy_group_display_order
 
 class RepairConfirmOperator(bpy.types.Operator):
     """This action will clear out the default camera and light. Changes made to the rig object, compositor nodes and recolorable materials will be lost."""
@@ -41,22 +41,6 @@ def addRenderButton(layout, hasFailed = False):
     if hasFailed:
         text = "Render failed"
     row.operator("render.rct_switch", text=text)
-
-legacy_group_display_order = [
-    "VEHICLE_SPRITE_FLAG_FLAT",
-    "VEHICLE_SPRITE_FLAG_FLAT_BANKED",
-    "VEHICLE_SPRITE_FLAG_GENTLE_SLOPES",
-    "VEHICLE_SPRITE_FLAG_GENTLE_SLOPE_BANKED_TURNS",
-    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPES",
-    "VEHICLE_SPRITE_FLAG_DIAGONAL_SLOPE_BANKED",
-    "VEHICLE_SPRITE_FLAG_STEEP_SLOPES",
-    "VEHICLE_SPRITE_FLAG_VERTICAL_SLOPES",
-    "VEHICLE_SPRITE_FLAG_INLINE_TWISTS",
-    "VEHICLE_SPRITE_FLAG_CORKSCREWS",
-    "VEHICLE_SPRITE_FLAG_ZERO_G_ROLLS",
-    "VEHICLE_SPRITE_FLAG_CURVED_LIFT_HILL",
-    "VEHICLE_SPRITE_FLAG_RESTRAINT_ANIMATION"
-]
 
 class GraphicsHelperPanel(bpy.types.Panel):
     bl_label = "RCT Graphics Helper"
@@ -236,11 +220,12 @@ class GraphicsHelperPanel(bpy.types.Panel):
         columns = [split.column(), split.column()]
         i = 0
         if properties.sprite_group_mode == "SIMPLE":
-            for legacy_group_name in self.legacy_group_display_order:
+            splitpoint = len(legacy_group_display_order) // 2
+            for legacy_group_name in legacy_group_display_order:
                 sprite_track_flagset = properties.legacy_spritegroups[legacy_group_name]
                 index = legacy_group_names.index(legacy_group_name)
-                columns[i % 2].row().prop(properties, "legacy_flags",
-                                          index=index, text=sprite_track_flagset.name)
+                columns[i > splitpoint].row().prop(properties, "legacy_flags",
+                                                   index=index, text=sprite_track_flagset.name)
                 i += 1
         else:
             columns = [column.split(0.667) for column in columns]
