@@ -1,5 +1,5 @@
 '''
-Copyright (c) 2022 RCT Graphics Helper developers
+Copyright (c) 2023 RCT Graphics Helper developers
 
 For a complete list of all authors, please refer to the addon's meta info.
 Interested in contributing? Visit https://github.com/oli414/Blender-RCT-Graphics
@@ -16,6 +16,7 @@ from .operators.init_operator import Init
 from .operators.render_switch_operator import RenderRCTSwitch
 
 from .models.palette import palette_colors, palette_colors_details
+from .angle_sections.track import sprite_group_display_order, legacy_group_names, legacy_group_display_order
 
 class RepairConfirmOperator(bpy.types.Operator):
     """This action will clear out the default camera and light. Changes made to the rig object, compositor nodes and recolorable materials will be lost."""
@@ -211,21 +212,29 @@ class GraphicsHelperPanel(bpy.types.Panel):
         properties = scene.rct_graphics_helper_vehicle_properties
         general_properties = scene.rct_graphics_helper_general_properties
 
+        row = layout.row()
+        row.prop(properties,"sprite_group_mode")
+
         box = layout.box()
-
-        row = box.row()
-        row.label("Ride Vehicle Track Properties:")
-
-        split = box.split(.50)
+        split = box.split(0.5)
         columns = [split.column(), split.column()]
         i = 0
-        for sprite_track_flagset in properties.sprite_track_flags_list:
-            columns[i % 2].row().prop(properties, "sprite_track_flags",
-                                      index=i, text=sprite_track_flagset.name)
-            i += 1
-
-        row = layout.row()
-        row.prop(properties, "restraint_animation")
+        if properties.sprite_group_mode == "SIMPLE":
+            splitpoint = len(legacy_group_display_order) // 2
+            for legacy_group_name in legacy_group_display_order:
+                sprite_track_flagset = properties.legacy_spritegroups[legacy_group_name]
+                index = legacy_group_names.index(legacy_group_name)
+                columns[i >= splitpoint].row().prop(properties, "legacy_flags",
+                                                   index=index, text=sprite_track_flagset.name)
+                i += 1
+        else:
+            columns = [column.split(0.667) for column in columns]
+            subcolumns = [columns[0].column(), columns[0].column(),columns[1].column(), columns[1].column()]
+            splitpoint = len(sprite_group_display_order) // 2
+            for sprite_group_name in sprite_group_display_order:
+                subcolumns[(i > splitpoint) * 2].row().label(sprite_group_name+":")
+                subcolumns[(i > splitpoint) * 2 + 1].row().prop(properties, sprite_group_name, text = "")
+                i += 1
 
         row = layout.row()
         row.prop(properties, "inverted_set")
